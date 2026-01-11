@@ -45,3 +45,10 @@ date
 rm -f /usr/bin/sync_time.sh
 sed -i '/sync_time.sh/d' /etc/crontabs/root
 /etc/init.d/cron restart
+```
+## 📡 Kompatibilitas
+
+  •	OpenWrt 19+
+	•	BusyBox shell
+	•	Router LTE / modem
+	•	Router tanpa RTC
