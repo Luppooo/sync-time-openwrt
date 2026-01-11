@@ -1,8 +1,23 @@
-# sync-time-openwrt
+# ⏰ sync-time-openwrt
 
-Auto time sync script for OpenWrt.
+Script sinkronisasi waktu otomatis untuk OpenWrt menggunakan HTTP header sebagai alternatif saat NTP tidak tersedia.
 
-## Auto Install
+> Cocok untuk router tanpa RTC atau ISP yang memblokir NTP.
+
+---
+
+## 🚀 Fitur
+
+- Sinkron waktu otomatis
+- Bisa berjalan tanpa NTP
+- Ringan & cepat
+- Khusus OpenWrt
+- Auto pasang cron
+- Cocok untuk router modem / LTE
+
+---
+
+## ⚡ Instalasi Otomatis
 
 ```
 wget -O - https://raw.githubusercontent.com/Luppooo/sync-time-openwrt/main/install.sh | sh
