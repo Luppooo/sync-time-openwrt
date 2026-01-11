@@ -50,8 +50,18 @@ rm -f /usr/bin/sync_time.sh
 sed -i '/sync_time.sh/d' /etc/crontabs/root
 /etc/init.d/cron restart
 ```
-## 📡 Kompatibilitas
-• OpenWrt 19+
-• BusyBox shell
-• Router LTE / modem
-• Router tanpa RTC
+## 🔐 Keamanan & Lisensi
+
+Project ini menggunakan MIT License.
+Script boleh digunakan, dimodifikasi, dan didistribusikan, dengan tetap menyertakan credit pembuat.
+
+## 👤 Pembuat
+
+Luppooo
+
+GitHub:
+👉 https://github.com/Luppooo
+
+## ⭐ Dukungan
+
+Jika project ini membantu, silakan beri ⭐ di GitHub agar bisa terus dikembangkan.
