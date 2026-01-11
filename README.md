@@ -9,6 +9,13 @@ Script sinkronisasi waktu otomatis untuk OpenWrt menggunakan HTTP header sebagai
 
 ---
 
+
+## 📡 Kompatibilitas
+• OpenWrt 19+
+• BusyBox shell
+• Router LTE / modem
+• Router tanpa RTC
+
 ## 🚀 Fitur
 
 - Sinkron waktu otomatis
