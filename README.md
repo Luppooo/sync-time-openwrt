@@ -8,6 +8,7 @@
 ![Maintained](https://img.shields.io/badge/Maintained-Yes-brightgreen)
 ![Made with Love](https://img.shields.io/badge/Made%20with-%E2%9D%A4-red)
 ![Open Source](https://img.shields.io/badge/Open%20Source-Yes-green)
+
 📜 Changelog: https://github.com/Luppooo/sync-time-openwrt/blob/main/CHANGELOG.md
 
 Script sinkronisasi waktu otomatis untuk OpenWrt menggunakan HTTP header sebagai alternatif saat NTP tidak tersedia.
