@@ -80,6 +80,16 @@ echo "${CYAN} Copyright: © ${YEAR} ${AUTHOR}${NC}"
 echo "${BLUE}==============================================${NC}"
 echo ""
 
+echo "Installer akan mengunduh script dari GitHub."
+printf "Lanjutkan download? (y/n): "
+read yn
+
+case "$yn" in
+  y|Y) echo "Melanjutkan instalasi..." ;;
+  n|N) echo "Instalasi dibatalkan oleh user."; exit 0 ;;
+  *) echo "Input tidak valid. Gunakan y atau n."; exit 1 ;;
+esac
+
 typehack "Mengunduh script utama..."
 spinner
 if wget -q -O "$TARGET" "$URL"; then
