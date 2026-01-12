@@ -2,7 +2,8 @@
 ![OpenWrt](https://img.shields.io/badge/OpenWrt-Compatible-brightgreen)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![Shell](https://img.shields.io/badge/Shell-BusyBox-orange)
-
+![Made with Love](https://img.shields.io/badge/Made%20with-%E2%9D%A4-red)
+![Open Source](https://img.shields.io/badge/Open%20Source-Yes-green)
 Script sinkronisasi waktu otomatis untuk OpenWrt menggunakan HTTP header sebagai alternatif saat NTP tidak tersedia.
 
 > Cocok untuk router tanpa RTC atau ISP yang memblokir NTP.
