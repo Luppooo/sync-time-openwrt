@@ -32,7 +32,10 @@ Script sinkronisasi waktu otomatis untuk OpenWrt menggunakan HTTP header sebagai
 
 ```
 wget -O - https://raw.githubusercontent.com/Luppooo/sync-time-openwrt/main/install.sh | sh
-
+```
+## 🕒 Jadwal Cron Default
+```
+*/5 * * * * /usr/bin/sync_time.sh >/dev/null 2>&1
 ```
 ## 🔧 Instalasi Manual
 
