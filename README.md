@@ -27,26 +27,21 @@ Script sinkronisasi waktu otomatis untuk OpenWrt menggunakan HTTP header sebagai
 - Cocok untuk router modem / LTE
 
 ---
-
 ## ⚡ Instalasi Otomatis
-
 ```
 wget -O - https://raw.githubusercontent.com/Luppooo/sync-time-openwrt/main/install.sh | sh
+```
+## 🔧 Instalasi Manual
+```
+wget https://raw.githubusercontent.com/Luppooo/sync-time-openwrt/main/scripts/sync_time.sh
+chmod +x sync_time.sh
+mv sync_time.sh /usr/bin/
 ```
 ## 🕒 Jadwal Cron Default
 ```
 */5 * * * * /usr/bin/sync_time.sh >/dev/null 2>&1
 ```
-## 🔧 Instalasi Manual
-
-```
-wget https://raw.githubusercontent.com/Luppooo/sync-time-openwrt/main/scripts/sync_time.sh
-chmod +x sync_time.sh
-mv sync_time.sh /usr/bin/
-
-```
 ## 🧪 Test Script
-
 ```
 /usr/bin/sync_time.sh
 date
