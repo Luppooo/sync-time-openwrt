@@ -65,7 +65,7 @@ Semua proses ini berjalan cepat dan tidak membutuhkan NTP server.
 ---
 ## ⚡ Instalasi Otomatis
 ```
-wget -O - https://raw.githubusercontent.com/Luppooo/sync-time-openwrt/main/install.sh | sh
+wget -O - https://raw.githubusercontent.com/Luppooo/sync-time-openwrt/main/installer/install.sh | sh
 ```
 ## 🔧 Instalasi Manual
 ```
