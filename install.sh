@@ -1,16 +1,6 @@
 #!/bin/sh
 set -e
 
-# ======================================
-# sync-time-openwrt Installer
-# Author   : Luppooo
-# License  : MIT
-# Repo     : https://github.com/Luppooo/sync-time-openwrt
-# Version  : v1.0.0
-# Year     : 2026
-# ======================================
-
-# ===== Colors =====
 GREEN="\033[1;32m"
 BLUE="\033[1;34m"
 CYAN="\033[1;36m"
@@ -19,7 +9,6 @@ RED="\033[1;31m"
 WHITE="\033[1;37m"
 NC="\033[0m"
 
-# ===== Info =====
 AUTHOR="Luppooo"
 LICENSE="MIT License"
 VERSION="v1.0.0"
@@ -30,7 +19,6 @@ URL="https://raw.githubusercontent.com/Luppooo/sync-time-openwrt/main/scripts/sy
 TARGET="/usr/bin/sync_time.sh"
 CRON_JOB="*/5 * * * * $TARGET >/dev/null 2>&1"
 
-# ===== Logo =====
 logo_text() {
   echo "${BLUE}   ____                     _      __      __${NC}"
   echo "${BLUE}  / __ \\____  ___  _____   | | /| / /___ _/ /_${NC}"
@@ -41,7 +29,6 @@ logo_text() {
   echo "${BLUE}==============================================${NC}"
 }
 
-# ===== Animations =====
 typehack() {
   text="$1"
   for i in $(seq 1 ${#text}); do
@@ -73,21 +60,17 @@ progress() {
   echo
 }
 
-# ===== Log Functions =====
 log_info()  { echo "${BLUE}[INFO]${NC} $1"; }
 log_warn()  { echo "${YELLOW}[WARN]${NC} $1"; }
 log_error() { echo "${RED}[ERROR]${NC} $1"; }
 log_ok()    { echo "${GREEN}[OK]${NC} $1"; }
 
-# ===== Root Check =====
 if [ "$(id -u)" != "0" ]; then
   log_error "Installer harus dijalankan sebagai root!"
   exit 1
 fi
 
 clear
-
-# ===== Header =====
 logo_text
 echo "${CYAN} Author   : ${AUTHOR}${NC}"
 echo "${CYAN} Version  : ${VERSION}${NC}"
@@ -97,27 +80,21 @@ echo "${CYAN} Copyright: © ${YEAR} ${AUTHOR}${NC}"
 echo "${BLUE}==============================================${NC}"
 echo ""
 
-# ===== Step 1 =====
 typehack "Mengunduh script utama..."
 spinner
 if wget -q -O "$TARGET" "$URL"; then
-  if [ ! -s "$TARGET" ]; then
-    log_error "File kosong setelah download!"
-    exit 1
-  fi
+  [ ! -s "$TARGET" ] && log_error "File kosong setelah download!" && exit 1
   log_ok "Download berhasil."
 else
   log_error "Gagal mengunduh script."
   exit 1
 fi
 
-# ===== Step 2 =====
 typehack "Mengatur permission..."
 spinner
 chmod +x "$TARGET"
 log_ok "Permission diset."
 
-# ===== Step 3 =====
 typehack "Menjalankan test script..."
 spinner
 if "$TARGET"; then
@@ -126,7 +103,6 @@ else
   log_warn "Script berjalan namun waktu mungkin belum sinkron."
 fi
 
-# ===== Step 4 =====
 typehack "Mengatur cron otomatis..."
 spinner
 if grep -q "$TARGET" /etc/crontabs/root 2>/dev/null; then
@@ -139,11 +115,9 @@ fi
 /etc/init.d/cron restart
 log_ok "Service cron direstart."
 
-# ===== Final Progress =====
 typehack "Menyelesaikan instalasi..."
 progress
 
-# ===== Footer =====
 echo ""
 echo "${BLUE}==============================================${NC}"
 echo "${GREEN} Instalasi Berhasil!${NC}"
