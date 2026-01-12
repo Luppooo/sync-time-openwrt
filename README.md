@@ -86,9 +86,7 @@ date
 ```
 ## 🗑 Uninstall
 ```
-rm -f /usr/bin/sync_time.sh
-sed -i '/sync_time.sh/d' /etc/crontabs/root
-/etc/init.d/cron restart
+wget -O - https://raw.githubusercontent.com/Luppooo/sync-time-openwrt/main/installer/uninstall.sh | sh
 ```
 ## 🔐 Keamanan & Lisensi
 
