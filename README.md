@@ -1,4 +1,5 @@
 # ⏰ sync-time-openwrt
+
 ![OpenWrt](https://img.shields.io/badge/OpenWrt-Compatible-brightgreen)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![Shell](https://img.shields.io/badge/Shell-BusyBox-orange)
@@ -7,16 +8,51 @@
 ![Maintained](https://img.shields.io/badge/Maintained-Yes-brightgreen)
 ![Made with Love](https://img.shields.io/badge/Made%20with-%E2%9D%A4-red)
 ![Open Source](https://img.shields.io/badge/Open%20Source-Yes-green)
+
 Script sinkronisasi waktu otomatis untuk OpenWrt menggunakan HTTP header sebagai alternatif saat NTP tidak tersedia.
 
 > Cocok untuk router tanpa RTC atau ISP yang memblokir NTP.
 
+---
+
+## ❓ Kenapa Butuh Script Ini?
+
+Banyak router OpenWrt tidak memiliki RTC (Real Time Clock).  
+Akibatnya, setiap kali router restart atau listrik mati, waktu sistem akan kembali ke waktu yang salah.
+
+Hal ini bisa menyebabkan:
+
+- HTTPS error
+- Sertifikat dianggap kadaluarsa
+- Cron job tidak berjalan
+- Log sistem tidak akurat
+- Update paket gagal
+
+Script ini dibuat untuk mengatasi masalah tersebut dengan cara yang ringan, cepat, dan tanpa ketergantungan NTP.
+
+---
+
+## ⚙ Cara Kerja
+
+1. Script mengirim request HTTP ke server publik.
+2. Server mengirim waktu aktual melalui HTTP header.
+3. Script membaca header `Date`.
+4. Waktu dikonversi ke format sistem OpenWrt.
+5. Sistem waktu OpenWrt diperbarui otomatis.
+
+Semua proses ini berjalan cepat dan tidak membutuhkan NTP server.
+
+---
+
 ## 📡 Kompatibilitas
+
 - OpenWrt 19+
 - BusyBox shell
 - Router LTE / modem
 - Router tanpa RTC
+
 ---
+
 ## 🚀 Fitur
 
 - Sinkron waktu otomatis
