@@ -2,6 +2,9 @@
 ![OpenWrt](https://img.shields.io/badge/OpenWrt-Compatible-brightgreen)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![Shell](https://img.shields.io/badge/Shell-BusyBox-orange)
+![Status](https://img.shields.io/badge/Status-Stable-success)
+![Version](https://img.shields.io/badge/Version-v1.0.0-blueviolet)
+![Maintained](https://img.shields.io/badge/Maintained-Yes-brightgreen)
 ![Made with Love](https://img.shields.io/badge/Made%20with-%E2%9D%A4-red)
 ![Open Source](https://img.shields.io/badge/Open%20Source-Yes-green)
 Script sinkronisasi waktu otomatis untuk OpenWrt menggunakan HTTP header sebagai alternatif saat NTP tidak tersedia.
