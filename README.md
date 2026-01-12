@@ -33,7 +33,7 @@ wget -O - https://raw.githubusercontent.com/Luppooo/sync-time-openwrt/main/insta
 ## 🔧 Instalasi Manual
 
 ```
-wget https://raw.githubusercontent.com/Luppooo/sync-time-openwrt/main/sync_time.sh
+wget https://raw.githubusercontent.com/Luppooo/sync-time-openwrt/main/scripts/sync_time.sh
 chmod +x sync_time.sh
 mv sync_time.sh /usr/bin/
 
