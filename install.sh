@@ -1,57 +1,157 @@
 #!/bin/sh
+set -e
 
+# ======================================
+# sync-time-openwrt Installer
+# Author   : Luppooo
+# License  : MIT
+# Repo     : https://github.com/Luppooo/sync-time-openwrt
+# Version  : v1.0.0
+# Year     : 2026
+# ======================================
+
+# ===== Colors =====
 GREEN="\033[1;32m"
 BLUE="\033[1;34m"
+CYAN="\033[1;36m"
 YELLOW="\033[1;33m"
 RED="\033[1;31m"
+WHITE="\033[1;37m"
 NC="\033[0m"
 
+# ===== Info =====
 AUTHOR="Luppooo"
 LICENSE="MIT License"
 VERSION="v1.0.0"
 REPO="https://github.com/Luppooo/sync-time-openwrt"
 YEAR="2026"
 
-echo "${BLUE}======================================${NC}"
-echo "${GREEN}   OpenWrt Auto Time Sync Installer${NC}"
-echo "${BLUE}======================================${NC}"
-echo " Author   : ${AUTHOR}"
-echo " Version  : ${VERSION}"
-echo " License  : ${LICENSE}"
-echo " Repo     : ${REPO}"
-echo " Copyright: © ${YEAR} ${AUTHOR}"
-echo "${BLUE}======================================${NC}"
-echo ""
-
 URL="https://raw.githubusercontent.com/Luppooo/sync-time-openwrt/main/scripts/sync_time.sh"
 TARGET="/usr/bin/sync_time.sh"
+CRON_JOB="*/5 * * * * $TARGET >/dev/null 2>&1"
 
-echo "${YELLOW}[1/4] Mengunduh script...${NC}"
-wget -q -O $TARGET $URL || {
-  echo "${RED}Gagal mengunduh script!${NC}"
-  exit 1
+# ===== Logo =====
+logo_text() {
+  echo "${BLUE}   ____                     _      __      __${NC}"
+  echo "${BLUE}  / __ \\____  ___  _____   | | /| / /___ _/ /_${NC}"
+  echo "${BLUE} / / / / __ \\/ _ \\/ ___/   | |/ |/ / __ \`/ __/${NC}"
+  echo "${BLUE}/ /_/ / /_/ /  __/ /       |__/|__/ /_/ / /_  ${NC}"
+  echo "${BLUE}\\____/ .___/\\___/_/                    \\__,_/\\__/ ${NC}"
+  echo "${CYAN}    /_/   OpenWrt Auto Time Sync Installer${NC}"
+  echo "${BLUE}==============================================${NC}"
 }
 
-echo "${YELLOW}[2/4] Mengatur izin eksekusi...${NC}"
-chmod +x $TARGET
+# ===== Animations =====
+typehack() {
+  text="$1"
+  for i in $(seq 1 ${#text}); do
+    printf "%s" "$(echo "$text" | cut -c$i)"
+    sleep 0.03
+  done
+  echo
+}
 
-echo "${YELLOW}[3/4] Menjalankan test script...${NC}"
-$TARGET && echo "${GREEN}Test berhasil.${NC}"
+spinner() {
+  frames="| / - \\"
+  for i in $(seq 1 10); do
+    for f in $frames; do
+      printf "\r$f"
+      sleep 0.1
+    done
+  done
+  printf "\r"
+}
 
-echo "${YELLOW}[4/4] Memasang cron otomatis...${NC}"
-grep -q "sync_time.sh" /etc/crontabs/root || \
-echo "*/5 * * * * $TARGET >/dev/null 2>&1" >> /etc/crontabs/root
+progress() {
+  total=20
+  for i in $(seq 1 $total); do
+    printf "\r["
+    for j in $(seq 1 $i); do printf "█"; done
+    printf "] %d%%" $((i*100/total))
+    sleep 0.05
+  done
+  echo
+}
+
+# ===== Log Functions =====
+log_info()  { echo "${BLUE}[INFO]${NC} $1"; }
+log_warn()  { echo "${YELLOW}[WARN]${NC} $1"; }
+log_error() { echo "${RED}[ERROR]${NC} $1"; }
+log_ok()    { echo "${GREEN}[OK]${NC} $1"; }
+
+# ===== Root Check =====
+if [ "$(id -u)" != "0" ]; then
+  log_error "Installer harus dijalankan sebagai root!"
+  exit 1
+fi
+
+clear
+
+# ===== Header =====
+logo_text
+echo "${CYAN} Author   : ${AUTHOR}${NC}"
+echo "${CYAN} Version  : ${VERSION}${NC}"
+echo "${CYAN} License  : ${LICENSE}${NC}"
+echo "${CYAN} Repo     : ${REPO}${NC}"
+echo "${CYAN} Copyright: © ${YEAR} ${AUTHOR}${NC}"
+echo "${BLUE}==============================================${NC}"
+echo ""
+
+# ===== Step 1 =====
+typehack "Mengunduh script utama..."
+spinner
+if wget -q -O "$TARGET" "$URL"; then
+  if [ ! -s "$TARGET" ]; then
+    log_error "File kosong setelah download!"
+    exit 1
+  fi
+  log_ok "Download berhasil."
+else
+  log_error "Gagal mengunduh script."
+  exit 1
+fi
+
+# ===== Step 2 =====
+typehack "Mengatur permission..."
+spinner
+chmod +x "$TARGET"
+log_ok "Permission diset."
+
+# ===== Step 3 =====
+typehack "Menjalankan test script..."
+spinner
+if "$TARGET"; then
+  log_ok "Test script berhasil dijalankan."
+else
+  log_warn "Script berjalan namun waktu mungkin belum sinkron."
+fi
+
+# ===== Step 4 =====
+typehack "Mengatur cron otomatis..."
+spinner
+if grep -q "$TARGET" /etc/crontabs/root 2>/dev/null; then
+  log_warn "Cron sudah terpasang sebelumnya."
+else
+  echo "$CRON_JOB" >> /etc/crontabs/root
+  log_ok "Cron berhasil ditambahkan."
+fi
 
 /etc/init.d/cron restart
+log_ok "Service cron direstart."
 
+# ===== Final Progress =====
+typehack "Menyelesaikan instalasi..."
+progress
+
+# ===== Footer =====
 echo ""
-echo "${BLUE}======================================${NC}"
-echo "${GREEN} Instalasi Selesai!${NC}"
-echo "${BLUE}--------------------------------------${NC}"
-echo " Script : ${TARGET}"
-echo " Cron   : Setiap 5 menit"
-echo " Version: ${VERSION}"
-echo " Repo   : ${REPO}"
-echo "${BLUE}======================================${NC}"
-echo "${GREEN} Terima kasih telah menggunakan script ini${NC}"
-echo "${BLUE}======================================${NC}"
+echo "${BLUE}==============================================${NC}"
+echo "${GREEN} Instalasi Berhasil!${NC}"
+echo "${BLUE}----------------------------------------------${NC}"
+echo "${WHITE} Script  : $TARGET${NC}"
+echo "${WHITE} Cron    : Setiap 5 menit${NC}"
+echo "${WHITE} Version : $VERSION${NC}"
+echo "${WHITE} Repo    : $REPO${NC}"
+echo "${BLUE}==============================================${NC}"
+echo "${GREEN} Terima kasih telah menggunakan sync-time-openwrt${NC}"
+echo "${BLUE}==============================================${NC}"
