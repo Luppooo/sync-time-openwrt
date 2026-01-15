@@ -1,11 +1,11 @@
 #!/bin/sh
 set -e
-GREEN="$(printf '\033[1;32m')"
-BLUE="$(printf '\033[1;34m')"
-CYAN="$(printf '\033[1;36m')"
-YELLOW="$(printf '\033[1;33m')"
-RED="$(printf '\033[1;31m')"
-WHITE="$(printf '\033[1;37m')"
+GREEN="$(printf '\033[32m')"
+BLUE="$(printf '\033[34m')"
+CYAN="$(printf '\033[36m')"
+YELLOW="$(printf '\033[33m')"
+RED="$(printf '\033[31m')"
+WHITE="$(printf '\033[37m')"
 NC="$(printf '\033[0m')"
 
 AUTHOR="Luppooo"
@@ -29,20 +29,26 @@ logo_text() {
   printf "${BLUE}==============================================${NC}\n"
 }
 
+info()  { printf "${CYAN}[INFO]${NC} %s\n" "$1"; }
+ok()    { printf "${GREEN}[OK]${NC}   %s\n" "$1"; }
+warn()  { printf "${YELLOW}[WARN]${NC} %s\n" "$1"; }
+error() { printf "${RED}[ERROR]${NC} %s\n" "$1"; }
+
 typehack() {
   text="$1"
+  printf "${CYAN}"
   for i in $(seq 1 ${#text}); do
     printf "%s" "$(echo "$text" | cut -c$i)"
     sleep 0.03
   done
-  echo
+  printf "${NC}\n"
 }
 
 spinner() {
   frames="| / - \\"
-  for i in $(seq 1 8); do
+  for i in $(seq 1 6); do
     for f in $frames; do
-      printf "\r$f"
+      printf "\r${CYAN}$f${NC}"
       sleep 0.1
     done
   done
@@ -52,66 +58,61 @@ spinner() {
 progress() {
   total=20
   for i in $(seq 1 $total); do
-    printf "\r["
+    printf "\r${GREEN}["
     for j in $(seq 1 $i); do printf "█"; done
-    printf "] %d%%" $((i*100/total))
+    printf "] %d%%${NC}" $((i*100/total))
     sleep 0.05
   done
   echo
 }
 
-log_info()  { printf "${BLUE}[INFO]${NC} %s\n" "$1"; }
-log_warn()  { printf "${YELLOW}[WARN]${NC} %s\n" "$1"; }
-log_error() { printf "${RED}[ERROR]${NC} %s\n" "$1"; }
-log_ok()    { printf "${GREEN}[OK]${NC} %s\n" "$1"; }
-
 if [ "$(id -u)" != "0" ]; then
-  log_error "Installer harus dijalankan sebagai root!"
+  error "Installer harus dijalankan sebagai root!"
   exit 1
 fi
 
 clear
 logo_text
-printf "${CYAN} Author   : ${AUTHOR}${NC}\n"
-printf "${CYAN} Version  : ${VERSION}${NC}\n"
-printf "${CYAN} License  : ${LICENSE}${NC}\n"
-printf "${CYAN} Repo     : ${REPO}${NC}\n"
-printf "${CYAN} Copyright: © ${YEAR} ${AUTHOR}${NC}\n"
+printf "${WHITE} Author   : ${AUTHOR}${NC}\n"
+printf "${WHITE} Version  : ${VERSION}${NC}\n"
+printf "${WHITE} License  : ${LICENSE}${NC}\n"
+printf "${WHITE} Repo     : ${REPO}${NC}\n"
+printf "${WHITE} Copyright: © ${YEAR} ${AUTHOR}${NC}\n"
 printf "${BLUE}==============================================${NC}\n\n"
 
-printf "Installer akan mengunduh script dari GitHub.\n"
+info "Installer akan mengunduh script dari GitHub."
 
 while true; do
-  printf "Lanjutkan download? (y/n): "
+  printf "${CYAN}Lanjutkan download? (y/n): ${NC}"
   read -r yn </dev/tty
   case "$yn" in
-    y|Y) printf "Melanjutkan instalasi...\n"; break ;;
-    n|N) printf "Instalasi dibatalkan oleh user.\n"; exit 0 ;;
-    *) printf "Input tidak valid. Gunakan y atau n.\n" ;;
+    y|Y) ok "Melanjutkan instalasi..."; break ;;
+    n|N) warn "Instalasi dibatalkan oleh user."; exit 0 ;;
+    *) warn "Input tidak valid. Gunakan y atau n." ;;
   esac
 done
 
 typehack "Mengunduh script utama..."
 spinner
 if wget -q -O "$TARGET" "$URL"; then
-  [ ! -s "$TARGET" ] && log_error "File kosong setelah download!" && exit 1
-  log_ok "Download berhasil."
+  [ ! -s "$TARGET" ] && error "File kosong setelah download!" && exit 1
+  ok "Download berhasil."
 else
-  log_error "Gagal mengunduh script."
+  error "Gagal mengunduh script."
   exit 1
 fi
 
 typehack "Mengatur permission..."
 spinner
 chmod +x "$TARGET"
-log_ok "Permission diset."
+ok "Permission diset."
 
 typehack "Menjalankan test script..."
 spinner
 if "$TARGET"; then
-  log_ok "Test script berhasil dijalankan."
+  ok "Test script berhasil dijalankan."
 else
-  log_warn "Script berjalan namun waktu mungkin belum sinkron."
+  warn "Script berjalan namun waktu mungkin belum sinkron."
 fi
 
 typehack "Mengatur cron otomatis..."
@@ -120,14 +121,14 @@ spinner
 touch "$CRON_FILE"
 
 if grep -Fq "$TARGET" "$CRON_FILE"; then
-  log_warn "Cron sudah terpasang sebelumnya."
+  warn "Cron sudah terpasang sebelumnya."
 else
   echo "$CRON_JOB" >> "$CRON_FILE"
-  log_ok "Cron berhasil ditambahkan tanpa menghapus cron lain."
+  ok "Cron berhasil ditambahkan tanpa menghapus cron lain."
 fi
 
 /etc/init.d/cron restart
-log_ok "Service cron direstart."
+ok "Service cron direstart."
 
 typehack "Menyelesaikan instalasi..."
 progress
