@@ -1,7 +1,6 @@
 #!/bin/sh
 set -e
 
-NEON_GREEN="$(printf '\033[92m')"
 NEON_CYAN="$(printf '\033[96m')"
 NEON_MAGENTA="$(printf '\033[95m')"
 NEON_YELLOW="$(printf '\033[93m')"
@@ -35,16 +34,6 @@ step()  { printf "${NEON_MAGENTA}>> ${NC}%s\n" "$1"; }
 ok()    { printf "${NEON_CYAN}[OK]${NC}   %s\n" "$1"; }
 warn()  { printf "${NEON_YELLOW}[WARN]${NC} %s\n" "$1"; }
 error() { printf "${NEON_RED}[ERROR]${NC} %s\n" "$1"; }
-
-typehack() {
-  text="$1"
-  printf "${NEON_CYAN}"
-  for i in $(seq 1 ${#text}); do
-    printf "%s" "$(echo "$text" | cut -c$i)"
-    sleep 0.03
-  done
-  printf "${NC}\n"
-}
 
 spinner() {
   frames="| / - \\"
