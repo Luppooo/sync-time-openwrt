@@ -1,7 +1,5 @@
 #!/bin/sh
 set -e
-
-# ===== COLOR (PRINTF SAFE) =====
 GREEN="$(printf '\033[1;32m')"
 BLUE="$(printf '\033[1;34m')"
 CYAN="$(printf '\033[1;36m')"
