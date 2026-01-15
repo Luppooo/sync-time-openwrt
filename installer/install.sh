@@ -1,13 +1,14 @@
 #!/bin/sh
 set -e
 
-GREEN="\033[1;32m"
-BLUE="\033[1;34m"
-CYAN="\033[1;36m"
-YELLOW="\033[1;33m"
-RED="\033[1;31m"
-WHITE="\033[1;37m"
-NC="\033[0m"
+# ===== COLOR (PRINTF SAFE) =====
+GREEN="$(printf '\033[1;32m')"
+BLUE="$(printf '\033[1;34m')"
+CYAN="$(printf '\033[1;36m')"
+YELLOW="$(printf '\033[1;33m')"
+RED="$(printf '\033[1;31m')"
+WHITE="$(printf '\033[1;37m')"
+NC="$(printf '\033[0m')"
 
 AUTHOR="Luppooo"
 LICENSE="MIT License"
@@ -21,13 +22,13 @@ CRON_JOB="*/5 * * * * $TARGET >/dev/null 2>&1"
 CRON_FILE="/etc/crontabs/root"
 
 logo_text() {
-  echo "${BLUE}   ____                     _      __      __${NC}"
-  echo "${BLUE}  / __ \\____  ___  _____   | | /| / /___ _/ /_${NC}"
-  echo "${BLUE} / / / / __ \\/ _ \\/ ___/   | |/ |/ / __ \`/ __/${NC}"
-  echo "${BLUE}/ /_/ / /_/ /  __/ /       |__/|__/ /_/ / /_  ${NC}"
-  echo "${BLUE}\\____/ .___/\\___/_/                    \\__,_/\\__/ ${NC}"
-  echo "${CYAN}    /_/   OpenWrt Auto Time Sync Installer${NC}"
-  echo "${BLUE}==============================================${NC}"
+  printf "${BLUE}   ____                     _      __      __${NC}\n"
+  printf "${BLUE}  / __ \\____  ___  _____   | | /| / /___ _/ /_${NC}\n"
+  printf "${BLUE} / / / / __ \\/ _ \\/ ___/   | |/ |/ / __ \`/ __/${NC}\n"
+  printf "${BLUE}/ /_/ / /_/ /  __/ /       |__/|__/ /_/ / /_  ${NC}\n"
+  printf "${BLUE}\\____/ .___/\\___/_/                    \\__,_/\\__/ ${NC}\n"
+  printf "${CYAN}    /_/   OpenWrt Auto Time Sync Installer${NC}\n"
+  printf "${BLUE}==============================================${NC}\n"
 }
 
 typehack() {
@@ -61,10 +62,10 @@ progress() {
   echo
 }
 
-log_info()  { echo "${BLUE}[INFO]${NC} $1"; }
-log_warn()  { echo "${YELLOW}[WARN]${NC} $1"; }
-log_error() { echo "${RED}[ERROR]${NC} $1"; }
-log_ok()    { echo "${GREEN}[OK]${NC} $1"; }
+log_info()  { printf "${BLUE}[INFO]${NC} %s\n" "$1"; }
+log_warn()  { printf "${YELLOW}[WARN]${NC} %s\n" "$1"; }
+log_error() { printf "${RED}[ERROR]${NC} %s\n" "$1"; }
+log_ok()    { printf "${GREEN}[OK]${NC} %s\n" "$1"; }
 
 if [ "$(id -u)" != "0" ]; then
   log_error "Installer harus dijalankan sebagai root!"
@@ -73,23 +74,22 @@ fi
 
 clear
 logo_text
-echo "${CYAN} Author   : ${AUTHOR}${NC}"
-echo "${CYAN} Version  : ${VERSION}${NC}"
-echo "${CYAN} License  : ${LICENSE}${NC}"
-echo "${CYAN} Repo     : ${REPO}${NC}"
-echo "${CYAN} Copyright: © ${YEAR} ${AUTHOR}${NC}"
-echo "${BLUE}==============================================${NC}"
-echo ""
+printf "${CYAN} Author   : ${AUTHOR}${NC}\n"
+printf "${CYAN} Version  : ${VERSION}${NC}\n"
+printf "${CYAN} License  : ${LICENSE}${NC}\n"
+printf "${CYAN} Repo     : ${REPO}${NC}\n"
+printf "${CYAN} Copyright: © ${YEAR} ${AUTHOR}${NC}\n"
+printf "${BLUE}==============================================${NC}\n\n"
 
-echo "Installer akan mengunduh script dari GitHub."
+printf "Installer akan mengunduh script dari GitHub.\n"
 
 while true; do
   printf "Lanjutkan download? (y/n): "
   read -r yn </dev/tty
   case "$yn" in
-    y|Y) echo "Melanjutkan instalasi..."; break ;;
-    n|N) echo "Instalasi dibatalkan oleh user."; exit 0 ;;
-    *) echo "Input tidak valid. Gunakan y atau n." ;;
+    y|Y) printf "Melanjutkan instalasi...\n"; break ;;
+    n|N) printf "Instalasi dibatalkan oleh user.\n"; exit 0 ;;
+    *) printf "Input tidak valid. Gunakan y atau n.\n" ;;
   esac
 done
 
@@ -134,14 +134,14 @@ log_ok "Service cron direstart."
 typehack "Menyelesaikan instalasi..."
 progress
 
-echo ""
-echo "${BLUE}==============================================${NC}"
-echo "${GREEN} Instalasi Berhasil!${NC}"
-echo "${BLUE}----------------------------------------------${NC}"
-echo "${WHITE} Script  : $TARGET${NC}"
-echo "${WHITE} Cron    : Setiap 5 menit${NC}"
-echo "${WHITE} Version : $VERSION${NC}"
-echo "${WHITE} Repo    : $REPO${NC}"
-echo "${BLUE}==============================================${NC}"
-echo "${GREEN} Terima kasih telah menggunakan sync-time-openwrt${NC}"
-echo "${BLUE}==============================================${NC}"
+printf "\n"
+printf "${BLUE}==============================================${NC}\n"
+printf "${GREEN} Instalasi Berhasil!${NC}\n"
+printf "${BLUE}----------------------------------------------${NC}\n"
+printf "${WHITE} Script  : $TARGET${NC}\n"
+printf "${WHITE} Cron    : Setiap 5 menit${NC}\n"
+printf "${WHITE} Version : $VERSION${NC}\n"
+printf "${WHITE} Repo    : $REPO${NC}\n"
+printf "${BLUE}==============================================${NC}\n"
+printf "${GREEN} Terima kasih telah menggunakan sync-time-openwrt${NC}\n"
+printf "${BLUE}==============================================${NC}\n"
