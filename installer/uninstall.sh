@@ -1,43 +1,41 @@
 #!/bin/sh
 set -e
 
-GREEN="\033[1;32m"
-BLUE="\033[1;34m"
-CYAN="\033[1;36m"
-YELLOW="\033[1;33m"
-RED="\033[1;31m"
-WHITE="\033[1;37m"
-NC="\033[0m"
+NEON_CYAN="$(printf '\033[96m')"
+NEON_MAGENTA="$(printf '\033[95m')"
+NEON_YELLOW="$(printf '\033[93m')"
+NEON_RED="$(printf '\033[91m')"
+NEON_BLUE="$(printf '\033[94m')"
+NEON_GREEN="$(printf '\033[92m')"
+NC="$(printf '\033[0m')"
 
 AUTHOR="Luppooo"
 VERSION="v1.0.0"
 
 TARGET="/usr/bin/sync_time.sh"
+CRON_FILE="/etc/crontabs/root"
 
 logo_text() {
-  echo "${BLUE}   ____                     _      __      __${NC}"
-  echo "${BLUE}  / __ \\____  ___  _____   | | /| / /___ _/ /_${NC}"
-  echo "${BLUE} / / / / __ \\/ _ \\/ ___/   | |/ |/ / __ \`/ __/${NC}"
-  echo "${BLUE}/ /_/ / /_/ /  __/ /       |__/|__/ /_/ / /_  ${NC}"
-  echo "${BLUE}\\____/ .___/\\___/_/                    \\__,_/\\__/ ${NC}"
-  echo "${CYAN}    /_/   OpenWrt Auto Time Sync Uninstaller${NC}"
-  echo "${BLUE}==============================================${NC}"
+  printf "${NEON_MAGENTA}   ____                     _      __      __${NC}\n"
+  printf "${NEON_MAGENTA}  / __ \\____  ___  _____   | | /| / /___ _/ /_${NC}\n"
+  printf "${NEON_MAGENTA} / / / / __ \\/ _ \\/ ___/   | |/ |/ / __ \`/ __/${NC}\n"
+  printf "${NEON_MAGENTA}/ /_/ / /_/ /  __/ /       |__/|__/ /_/ / /_  ${NC}\n"
+  printf "${NEON_MAGENTA}\\____/ .___/\\___/_/                    \\__,_/\\__/ ${NC}\n"
+  printf "${NEON_CYAN}    /_/   OpenWrt Auto Time Sync Uninstaller${NC}\n"
+  printf "${NEON_MAGENTA}==============================================${NC}\n"
 }
 
-typehack() {
-  text="$1"
-  for i in $(seq 1 ${#text}); do
-    printf "%s" "$(echo "$text" | cut -c$i)"
-    sleep 0.03
-  done
-  echo
-}
+info()  { printf "${NEON_CYAN}[INFO] %s${NC}\n" "$1"; }
+ok()    { printf "${NEON_GREEN}[OK] %s${NC}\n" "$1"; }
+warn()  { printf "${NEON_YELLOW}[WARN] %s${NC}\n" "$1"; }
+error() { printf "${NEON_RED}[ERROR] %s${NC}\n" "$1"; }
+step()  { printf "${NEON_MAGENTA}>> %s${NC}\n" "$1"; }
 
 spinner() {
   frames="| / - \\"
-  for i in $(seq 1 10); do
+  for i in 1 2 3 4 5; do
     for f in $frames; do
-      printf "\r$f"
+      printf "\r${NEON_CYAN}$f${NC}"
       sleep 0.1
     done
   done
@@ -47,64 +45,59 @@ spinner() {
 progress() {
   total=20
   for i in $(seq 1 $total); do
-    printf "\r["
+    printf "\r${NEON_CYAN}["
     for j in $(seq 1 $i); do printf "█"; done
-    printf "] %d%%" $((i*100/total))
+    printf "] %d%%${NC}" $((i*100/total))
     sleep 0.05
   done
   echo
 }
 
-log_info()  { echo "${BLUE}[INFO]${NC} $1"; }
-log_warn()  { echo "${YELLOW}[WARN]${NC} $1"; }
-log_error() { echo "${RED}[ERROR]${NC} $1"; }
-log_ok()    { echo "${GREEN}[OK]${NC} $1"; }
-
 if [ "$(id -u)" != "0" ]; then
-  log_error "Uninstaller harus dijalankan sebagai root!"
+  error "Uninstaller harus dijalankan sebagai root!"
   exit 1
 fi
 
 clear
 logo_text
-echo "${CYAN} Author   : ${AUTHOR}${NC}"
-echo "${CYAN} Version  : ${VERSION}${NC}"
-echo "${BLUE}==============================================${NC}"
-echo ""
+printf "${NEON_BLUE} Author   : ${AUTHOR}${NC}\n"
+printf "${NEON_BLUE} Version  : ${VERSION}${NC}\n"
+printf "${NEON_MAGENTA}==============================================${NC}\n\n"
 
-printf "${YELLOW}Lanjutkan uninstall? (y/n): ${NC}"
-read yn
+while true; do
+  printf "${NEON_CYAN}Lanjutkan uninstall? (y/n): ${NC}"
+  read -r yn </dev/tty
+  case "$yn" in
+    y|Y) ok "Melanjutkan uninstall..."; break ;;
+    n|N) warn "Uninstall dibatalkan."; exit 0 ;;
+    *) warn "Input tidak valid. Gunakan y atau n." ;;
+  esac
+done
 
-case "$yn" in
-  y|Y) echo "${GREEN}Melanjutkan uninstall...${NC}" ;;
-  n|N) echo "${YELLOW}Uninstall dibatalkan.${NC}"; exit 0 ;;
-  *) echo "${RED}Input tidak valid.${NC}"; exit 1 ;;
-esac
-
-typehack "Menghapus script utama..."
+step "Menghapus script utama..."
 spinner
 rm -f "$TARGET"
-log_ok "Script dihapus."
+ok "Script dihapus."
 
-typehack "Menghapus cron job..."
+step "Membersihkan cron job..."
 spinner
-sed -i '/sync_time.sh/d' /etc/crontabs/root
-log_ok "Cron dibersihkan."
+sed -i '/sync_time.sh/d' "$CRON_FILE" 2>/dev/null || true
+ok "Cron dibersihkan."
 
-typehack "Merestart cron service..."
+step "Merestart cron service..."
 spinner
 /etc/init.d/cron restart
-log_ok "Cron direstart."
+ok "Cron direstart."
 
-typehack "Menyelesaikan uninstall..."
+step "Menyelesaikan uninstall..."
 progress
 
-echo ""
-echo "${BLUE}==============================================${NC}"
-echo "${GREEN} Uninstall Berhasil!${NC}"
-echo "${BLUE}----------------------------------------------${NC}"
-echo "${WHITE} Script  : Dihapus${NC}"
-echo "${WHITE} Cron    : Dibersihkan${NC}"
-echo "${BLUE}==============================================${NC}"
-echo "${GREEN} Terima kasih telah menggunakan sync-time-openwrt${NC}"
-echo "${BLUE}==============================================${NC}"
+printf "\n"
+printf "${NEON_MAGENTA}==============================================${NC}\n"
+printf "${NEON_GREEN} Uninstall Berhasil!${NC}\n"
+printf "${NEON_MAGENTA}----------------------------------------------${NC}\n"
+printf "${NEON_BLUE} Script  : Dihapus${NC}\n"
+printf "${NEON_BLUE} Cron    : Dibersihkan${NC}\n"
+printf "${NEON_MAGENTA}==============================================${NC}\n"
+printf "${NEON_CYAN} Terima kasih telah menggunakan sync-time-openwrt${NC}\n"
+printf "${NEON_MAGENTA}==============================================${NC}\n"
