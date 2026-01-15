@@ -101,7 +101,7 @@ ok "Permission diset."
 step "Menjalankan test script..."
 spinner
 "$TARGET" | while read line; do
-  printf "${NEON_BLUE}%s${NC}\n" "$line"
+  printf "${NEON_CYAN}%s${NC}\n" "$line"
 done
 ok "Test script berhasil dijalankan."
 
