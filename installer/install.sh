@@ -1,5 +1,7 @@
 #!/bin/sh
 set -e
+
+# ===== CYBER NEON COLOR THEME =====
 NEON_GREEN="$(printf '\033[92m')"
 NEON_CYAN="$(printf '\033[96m')"
 NEON_MAGENTA="$(printf '\033[95m')"
