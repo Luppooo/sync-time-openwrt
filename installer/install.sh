@@ -18,6 +18,7 @@ YEAR="2026"
 URL="https://raw.githubusercontent.com/Luppooo/sync-time-openwrt/main/scripts/sync_time.sh"
 TARGET="/usr/bin/sync_time.sh"
 CRON_JOB="*/5 * * * * $TARGET >/dev/null 2>&1"
+CRON_FILE="/etc/crontabs/root"
 
 logo_text() {
   echo "${BLUE}   ____                     _      __      __${NC}"
@@ -117,11 +118,14 @@ fi
 
 typehack "Mengatur cron otomatis..."
 spinner
-if grep -q "$TARGET" /etc/crontabs/root 2>/dev/null; then
+
+touch "$CRON_FILE"
+
+if grep -Fq "$TARGET" "$CRON_FILE"; then
   log_warn "Cron sudah terpasang sebelumnya."
 else
-  echo "$CRON_JOB" >> /etc/crontabs/root
-  log_ok "Cron berhasil ditambahkan."
+  echo "$CRON_JOB" >> "$CRON_FILE"
+  log_ok "Cron berhasil ditambahkan tanpa menghapus cron lain."
 fi
 
 /etc/init.d/cron restart
