@@ -1,13 +1,11 @@
 #!/bin/sh
 set -e
-
-# ===== CYBER NEON COLOR THEME =====
 NEON_GREEN="$(printf '\033[92m')"
 NEON_CYAN="$(printf '\033[96m')"
 NEON_MAGENTA="$(printf '\033[95m')"
 NEON_YELLOW="$(printf '\033[93m')"
 NEON_RED="$(printf '\033[91m')"
-WHITE="$(printf '\033[97m')"
+NEON_BLUE="$(printf '\033[94m')"
 NC="$(printf '\033[0m')"
 
 AUTHOR="Luppooo"
@@ -78,11 +76,11 @@ fi
 
 clear
 logo_text
-printf "${WHITE} Author   : ${AUTHOR}${NC}\n"
-printf "${WHITE} Version  : ${VERSION}${NC}\n"
-printf "${WHITE} License  : ${LICENSE}${NC}\n"
-printf "${WHITE} Repo     : ${REPO}${NC}\n"
-printf "${WHITE} Copyright: © ${YEAR} ${AUTHOR}${NC}\n"
+printf "${NEON_BLUE} Author   : ${AUTHOR}${NC}\n"
+printf "${NEON_BLUE} Version  : ${VERSION}${NC}\n"
+printf "${NEON_BLUE} License  : ${LICENSE}${NC}\n"
+printf "${NEON_BLUE} Repo     : ${REPO}${NC}\n"
+printf "${NEON_BLUE} Copyright: © ${YEAR} ${AUTHOR}${NC}\n"
 printf "${NEON_MAGENTA}==============================================${NC}\n\n"
 
 info "Installer akan mengunduh script dari GitHub."
@@ -142,10 +140,10 @@ printf "\n"
 printf "${NEON_MAGENTA}==============================================${NC}\n"
 printf "${NEON_GREEN} Instalasi Berhasil!${NC}\n"
 printf "${NEON_MAGENTA}----------------------------------------------${NC}\n"
-printf "${WHITE} Script  : $TARGET${NC}\n"
-printf "${WHITE} Cron    : Setiap 5 menit${NC}\n"
-printf "${WHITE} Version : $VERSION${NC}\n"
-printf "${WHITE} Repo    : $REPO${NC}\n"
+printf "${NEON_BLUE} Script  : $TARGET${NC}\n"
+printf "${NEON_BLUE} Cron    : Setiap 5 menit${NC}\n"
+printf "${NEON_BLUE} Version : $VERSION${NC}\n"
+printf "${NEON_BLUE} Repo    : $REPO${NC}\n"
 printf "${NEON_MAGENTA}==============================================${NC}\n"
 printf "${NEON_GREEN} Terima kasih telah menggunakan sync-time-openwrt${NC}\n"
 printf "${NEON_MAGENTA}==============================================${NC}\n"
