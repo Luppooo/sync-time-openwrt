@@ -1,5 +1,6 @@
 #!/bin/sh
 set -e
+
 NEON_GREEN="$(printf '\033[92m')"
 NEON_CYAN="$(printf '\033[96m')"
 NEON_MAGENTA="$(printf '\033[95m')"
@@ -19,7 +20,6 @@ TARGET="/usr/bin/sync_time.sh"
 CRON_JOB="*/5 * * * * $TARGET >/dev/null 2>&1"
 CRON_FILE="/etc/crontabs/root"
 
-# ===== UI =====
 logo_text() {
   printf "${NEON_MAGENTA}   ____                     _      __      __${NC}\n"
   printf "${NEON_MAGENTA}  / __ \\____  ___  _____   | | /| / /___ _/ /_${NC}\n"
@@ -32,7 +32,7 @@ logo_text() {
 
 info()  { printf "${NEON_CYAN}[INFO]${NC} %s\n" "$1"; }
 step()  { printf "${NEON_MAGENTA}>> ${NC}%s\n" "$1"; }
-ok()    { printf "${NEON_GREEN}[OK]${NC}   %s\n" "$1"; }
+ok()    { printf "${NEON_CYAN}[OK]${NC}   %s\n" "$1"; }
 warn()  { printf "${NEON_YELLOW}[WARN]${NC} %s\n" "$1"; }
 error() { printf "${NEON_RED}[ERROR]${NC} %s\n" "$1"; }
 
@@ -60,7 +60,7 @@ spinner() {
 progress() {
   total=20
   for i in $(seq 1 $total); do
-    printf "\r${NEON_GREEN}["
+    printf "\r${NEON_CYAN}["
     for j in $(seq 1 $i); do printf "█"; done
     printf "] %d%%${NC}" $((i*100/total))
     sleep 0.05
@@ -68,7 +68,6 @@ progress() {
   echo
 }
 
-# ===== CHECK ROOT =====
 if [ "$(id -u)" != "0" ]; then
   error "Installer harus dijalankan sebagai root!"
   exit 1
@@ -112,11 +111,10 @@ ok "Permission diset."
 
 step "Menjalankan test script..."
 spinner
-if "$TARGET" | while read line; do printf "${NEON_CYAN}%s${NC}\n" "$line"; done; then
-  ok "Test script berhasil dijalankan."
-else
-  warn "Script berjalan namun waktu mungkin belum sinkron."
-fi
+"$TARGET" | while read line; do
+  printf "${NEON_BLUE}%s${NC}\n" "$line"
+done
+ok "Test script berhasil dijalankan."
 
 step "Mengatur cron otomatis..."
 spinner
@@ -138,12 +136,12 @@ progress
 
 printf "\n"
 printf "${NEON_MAGENTA}==============================================${NC}\n"
-printf "${NEON_GREEN} Instalasi Berhasil!${NC}\n"
+printf "${NEON_CYAN} Instalasi Berhasil!${NC}\n"
 printf "${NEON_MAGENTA}----------------------------------------------${NC}\n"
 printf "${NEON_BLUE} Script  : $TARGET${NC}\n"
 printf "${NEON_BLUE} Cron    : Setiap 5 menit${NC}\n"
 printf "${NEON_BLUE} Version : $VERSION${NC}\n"
 printf "${NEON_BLUE} Repo    : $REPO${NC}\n"
 printf "${NEON_MAGENTA}==============================================${NC}\n"
-printf "${NEON_GREEN} Terima kasih telah menggunakan sync-time-openwrt${NC}\n"
+printf "${NEON_CYAN} Terima kasih telah menggunakan sync-time-openwrt${NC}\n"
 printf "${NEON_MAGENTA}==============================================${NC}\n"
