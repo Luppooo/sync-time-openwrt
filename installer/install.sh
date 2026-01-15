@@ -40,7 +40,7 @@ typehack() {
 
 spinner() {
   frames="| / - \\"
-  for i in $(seq 1 10); do
+  for i in $(seq 1 8); do
     for f in $frames; do
       printf "\r$f"
       sleep 0.1
@@ -81,14 +81,16 @@ echo "${BLUE}==============================================${NC}"
 echo ""
 
 echo "Installer akan mengunduh script dari GitHub."
-printf "Lanjutkan download? (y/n): "
-read yn
 
-case "$yn" in
-  y|Y) echo "Melanjutkan instalasi..." ;;
-  n|N) echo "Instalasi dibatalkan oleh user."; exit 0 ;;
-  *) echo "Input tidak valid. Gunakan y atau n."; exit 1 ;;
-esac
+while true; do
+  printf "Lanjutkan download? (y/n): "
+  read -r yn </dev/tty
+  case "$yn" in
+    y|Y) echo "Melanjutkan instalasi..."; break ;;
+    n|N) echo "Instalasi dibatalkan oleh user."; exit 0 ;;
+    *) echo "Input tidak valid. Gunakan y atau n." ;;
+  esac
+done
 
 typehack "Mengunduh script utama..."
 spinner
